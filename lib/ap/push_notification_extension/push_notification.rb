@@ -16,14 +16,14 @@ module AP
         @@config[:gcm_api_key] = key.private_decrypt(safe_token)
 
         Rails.logger.info "GCM KEY: #{@@config[:gcm_api_key]}"
-        
+
         @@config[:apple_cert] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT'].blank? ? config[:apple_cert] : ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT']
         @@config[:apple_cert_password] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'].blank? ? config[:apple_cert_password] :  ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD']
 
         cert_valid = false
-        if @@config[:apple_cert] && File.file?("#{Rails.root}/#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
+        if @@config[:apple_cert] && File.file?("#{Rails.root}#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
 
-          APNS.keystore  = "#{Rails.root}/#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}"
+          APNS.keystore  = "#{Rails.root}#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}"
           APNS.pass = ::AP::PushNotificationExtension::PushNotification.config[:apple_cert_password] unless ::AP::PushNotificationExtension::PushNotification.config[:apple_cert_password].blank?
 
           #pem_file = File.open("#{Rails.root}/#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
