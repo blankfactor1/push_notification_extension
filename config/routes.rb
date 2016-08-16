@@ -7,6 +7,7 @@ PushNotificationExtension::Engine.routes.draw do
   resources :channels do
     member do
       get 'push'
+      put 'manual_push'
     end
   end
   
