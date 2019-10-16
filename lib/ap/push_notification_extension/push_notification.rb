@@ -5,17 +5,9 @@ module AP
       def self.config_account(config={})
         config = HashWithIndifferentAccess.new(config)
 
-        @@config[:gcm_api_key_password] = ENV['AP_PUSH_NOTIFICATIONS_GCM_PASSWORD'].blank? ? config[:gcm_api_key_password] : ENV['AP_PUSH_NOTIFICATIONS_GCM_PASSWORD']
-        @@config[:gcm_keystore] = ENV['AP_PUSH_NOTIFICATIONS_GCM_KEYSTORE'].blank? ? config[:gcm_keystore] : ENV['AP_PUSH_NOTIFICATIONS_GCM_KEYSTORE']
-        @@config[:gcm_token_path] = ENV['AP_PUSH_NOTIFICATIONS_GCM_TOKEN'].blank? ? config[:gcm_token_path] : ENV['AP_PUSH_NOTIFICATIONS_GCM_TOKEN']
+        @@config[:fcm_server_key] = ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY'].blank? ? config[:fcm_server_key] : ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY']
 
-        keystore = OpenSSL::PKCS12.new(File.binread("#{Rails.root}#{@@config[:gcm_keystore]}"), @@config[:gcm_api_key_password])
-        key = keystore.key
-        safe_token = File.binread("#{Rails.root}#{@@config[:gcm_token_path]}")
-
-        @@config[:gcm_api_key] = key.private_decrypt(safe_token)
-
-        Rails.logger.info "GCM KEY: #{@@config[:gcm_api_key]}"
+        Rails.logger.info "FCM KEY: #{@@config[:fcm_server_key]}"
 
         @@config[:apple_cert] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT'].blank? ? config[:apple_cert] : ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT']
         @@config[:apple_cert_password] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'].blank? ? config[:apple_cert_password] :  ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD']
@@ -36,7 +28,7 @@ module AP
           APNS.port = 2195
           cert_valid = true
         end
-        raise "No push services configured!" unless cert_valid || @@config[:gcm_api_key]
+        raise "No push services configured!" unless cert_valid || @@config[:fcm_server_key]
       end
 
       def self.config

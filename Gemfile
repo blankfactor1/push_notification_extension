@@ -16,7 +16,7 @@ gem 'simple_form', '2.0.4'
 gem 'sass-rails', '3.2.5'
 gem 'compass-rails', '1.0.3'
 gem "apns", '1.0.0', :git => 'git://github.com/jpoz/APNS.git'
-gem "gcm", '~> 0.0.2'
+gem "fcm",
 gem 'actionpack'
 gem 'kaminari', '~> 0.14.1'
 

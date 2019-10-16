@@ -3,19 +3,19 @@ require 'test_helper'
 class PushNotificationTest < ActiveSupport::TestCase
 
   test "should know how to setup from environment variables" do
-    ENV['AP_PUSH_NOTIFICATIONS_GCM_API_KEY'] = "123"
+    ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY'] = "123"
     ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT'] = "345"
     ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'] = "password"
 
     AP::PushNotificationExtension::PushNotification.config_account
 
-    assert_equal AP::PushNotificationExtension::PushNotification.config[:gcm_api_key], "123"
+    assert_equal AP::PushNotificationExtension::PushNotification.config[:fcm_server_key], "123"
     assert_equal AP::PushNotificationExtension::PushNotification.config[:apple_cert], "345"
     assert_equal AP::PushNotificationExtension::PushNotification.config[:apple_cert_password], "password"
   end
 
   test "should raise error when there's no configuration" do
-    ENV['AP_PUSH_NOTIFICATIONS_GCM_API_KEY'] = nil
+    ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY'] = nil
     ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT'] = nil
     ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'] = nil
 
@@ -33,10 +33,10 @@ class PushNotificationTest < ActiveSupport::TestCase
     assert_equal "#{Rails.root}/tmp/cert", APNS.pem
   end
 
-  test "should setup GCM with valid attributes" do
-    ENV['AP_PUSH_NOTIFICATIONS_GCM_API_KEY'] = nil
-    AP::PushNotificationExtension::PushNotification.config_account(gcm_api_key: "some_key")
-    assert_equal "some_key", AP::PushNotificationExtension::PushNotification.config[:gcm_api_key]
+  test "should setup FCM with valid attributes" do
+    ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY'] = nil
+    AP::PushNotificationExtension::PushNotification.config_account(fcm_server_key: "some_key")
+    assert_equal "some_key", AP::PushNotificationExtension::PushNotification.config[:fcm_server_key]
   end
 
 end

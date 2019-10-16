@@ -1,4 +1,4 @@
-require 'gcm'
+require 'fcm'
 module PushNotificationExtension
   class Channel
     include ActiveModel::MassAssignmentSecurity
@@ -49,20 +49,21 @@ module PushNotificationExtension
           # Note that that app icons cannot be modified on the android side. This count will have to be displayed in 
           # a widget or from the notification system.
           hashed_message_payload["data"] = message_payload
-          hashed_message_payload["badge"] = badge
+          hashed_message_payload["notification"] = { body: alert, badge: badge }
+          hashed_message_payload.merge!(sound: sound) if !sound.blank?
         rescue
           Rails.logger.error "Unable to parse the message payload for android: " + $!.message
           Rails.logger.error $!.backtrace.join("\n")
         end  
         
         unless hashed_message_payload.nil?
-          if AP::PushNotificationExtension::PushNotification.config[:gcm_api_key]
-            gcm = ::GCM.new(AP::PushNotificationExtension::PushNotification.config[:gcm_api_key])
+          if AP::PushNotificationExtension::PushNotification.config[:fcm_server_key]
+            fcm = ::FCM.new(AP::PushNotificationExtension::PushNotification.config[:fcm_server_key])
             if android_device_tokens
-              gcm_result = gcm.send_notification(android_device_tokens, data: hashed_message_payload)
-              Rails.logger.info "Channel #{self.name}: GCM push status: #{gcm_result}"
+              fcm_result = fcm.send(android_device_tokens, hashed_message_payload)
+              Rails.logger.info "Channel #{self.name}: Android FCM push status: #{fcm_result}"
             else
-              Rails.logger.info "Channel #{self.name}: There are no device tokens available for GCM."
+              Rails.logger.info "Channel #{self.name}: There are no device tokens available for Android FCM."
             end
           end
         end

@@ -14,9 +14,9 @@
       "execute_push_notification": ["after_save", "after_create", "after_update", "after_destroy"]
     },
     "required_configuration": {
-      "gcm_api_key": {
+      "fcm_server_key": {
         "type": "String",
-        "description": "API key for Android GCM."
+        "description": "Server key for FCM Service."
       },
       "apple_cert": {
         "type": "File",
