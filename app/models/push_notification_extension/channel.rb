@@ -11,16 +11,16 @@ module PushNotificationExtension
     attr_accessible :name
 
     has_and_belongs_to_many :devices, :class_name => "PushNotificationExtension::Device"
-    
+
     has_many :messages, :class_name => "PushNotificationExtension::Message", :inverse_of => :channel
 
     def publish(badge = 0, alert, sound, message_payload)
       ios_notifications     = []
       android_notifications = []
       android_device_tokens = []
-      
+
       ios_message_payload = nil
-      if message_payload.is_a?(String)        
+      if message_payload.is_a?(String)
         begin
           ios_message_payload = JSON.parse(message_payload)
         rescue
@@ -30,23 +30,23 @@ module PushNotificationExtension
       else
         ios_message_payload = message_payload
       end
-      
+
       devices.each do |device|
         Rails.logger.info "Sending message #{message_payload}, with badge number #{badge}, to device #{device.token} of type #{device.type} for channel #{name}"
-        
+
         if device.ios?
           ios_notitifcation_options = {badge: badge, alert: alert, other: ios_message_payload}
           ios_notitifcation_options.merge!(sound: sound) if !sound.blank?
-          ios_notifications << APNS::Notification.new(device.token, ios_notitifcation_options) 
+          ios_notifications << APNS::Notification.new(device.token, ios_notitifcation_options)
         end
-        
+
         android_device_tokens << device.token if device.android?
       end
-      
+
       if Rails.env.production?
         hashed_message_payload = Hash.new
         begin
-          # Note that that app icons cannot be modified on the android side. This count will have to be displayed in 
+          # Note that that app icons cannot be modified on the android side. This count will have to be displayed in
           # a widget or from the notification system.
           hashed_message_payload["data"] = message_payload
           hashed_message_payload["notification"] = { body: alert, badge: badge }
@@ -54,8 +54,8 @@ module PushNotificationExtension
         rescue
           Rails.logger.error "Unable to parse the message payload for android: " + $!.message
           Rails.logger.error $!.backtrace.join("\n")
-        end  
-        
+        end
+
         unless hashed_message_payload.nil?
           if AP::PushNotificationExtension::PushNotification.config[:fcm_server_key]
             fcm = ::FCM.new(AP::PushNotificationExtension::PushNotification.config[:fcm_server_key])
@@ -67,11 +67,11 @@ module PushNotificationExtension
             end
           end
         end
-        
+
         ios_notifications.each do |ios_notification|
           APNS.send_notifications([ios_notification])
         end
-        
+
         self.messages << Message.new(alert: alert, badge: badge, message_payload: message_payload)
       else
         Rails.logger.info "Notifications will only be sent out for a production environment."

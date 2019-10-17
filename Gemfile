@@ -16,7 +16,7 @@ gem 'simple_form', '2.0.4'
 gem 'sass-rails', '3.2.5'
 gem 'compass-rails', '1.0.3'
 gem "apns", '1.0.0', :git => 'git://github.com/jpoz/APNS.git'
-gem "fcm",
+gem "fcm"
 gem 'actionpack'
 gem 'kaminari', '~> 0.14.1'
 
@@ -35,6 +35,3 @@ end
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
-
-# To use debugger
-gem 'debugger', '1.5.0'
