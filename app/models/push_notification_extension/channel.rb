@@ -19,23 +19,23 @@ module PushNotificationExtension
       android_notifications = []
       android_device_tokens = []
 
-      ios_message_payload = nil
+      parsed_message_payload = nil
       if message_payload.is_a?(String)
         begin
-          ios_message_payload = JSON.parse(message_payload)
+          parsed_message_payload = JSON.parse(message_payload)
         rescue
           Rails.logger.info "Not able to parse message payload: #{$!.message}. Sending the payload as just {data: <message_payload>}."
-          ios_message_payload = {data: message_payload}
+          parsed_message_payload = {data: message_payload}
         end
       else
-        ios_message_payload = message_payload
+        parsed_message_payload = message_payload
       end
 
       devices.each do |device|
         Rails.logger.info "Sending message #{message_payload}, with badge number #{badge}, to device #{device.token} of type #{device.type} for channel #{name}"
 
         if device.ios?
-          ios_notitifcation_options = {badge: badge, alert: alert, other: ios_message_payload}
+          ios_notitifcation_options = {badge: badge, alert: alert, other: parsed_message_payload}
           ios_notitifcation_options.merge!(sound: sound) if !sound.blank?
           ios_notifications << APNS::Notification.new(device.token, ios_notitifcation_options)
         end
@@ -48,7 +48,7 @@ module PushNotificationExtension
         begin
           # Note that that app icons cannot be modified on the android side. This count will have to be displayed in
           # a widget or from the notification system.
-          hashed_message_payload["data"] = message_payload
+          hashed_message_payload["data"] = parsed_message_payload
           hashed_message_payload["notification"] = { body: alert, badge: badge }
           hashed_message_payload.merge!(sound: sound) if !sound.blank?
         rescue
