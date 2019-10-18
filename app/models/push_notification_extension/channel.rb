@@ -31,6 +31,7 @@ module PushNotificationExtension
         parsed_message_payload = message_payload
       end
 
+      Rails.logger.info("Push notification devices: #{devices}")
       devices.each do |device|
         Rails.logger.info "Sending message #{message_payload}, with badge number #{badge}, to device #{device.token} of type #{device.type} for channel #{name}"
 
@@ -68,6 +69,7 @@ module PushNotificationExtension
           end
         end
 
+        Rails.logger.info("ios notifications: #{ios_notifications}")
         ios_notifications.each do |ios_notification|
           APNS.send_notifications([ios_notification])
         end
