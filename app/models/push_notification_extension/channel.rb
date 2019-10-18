@@ -31,7 +31,7 @@ module PushNotificationExtension
         parsed_message_payload = message_payload
       end
 
-      Rails.logger.info("Push notification devices: #{devices}")
+      Rails.logger.info("Push notification devices: #{devices.count}")
       devices.each do |device|
         Rails.logger.info "Sending message #{message_payload}, with badge number #{badge}, to device #{device.token} of type #{device.type} for channel #{name}"
 
@@ -60,7 +60,7 @@ module PushNotificationExtension
         unless hashed_message_payload.nil?
           if AP::PushNotificationExtension::PushNotification.config[:fcm_server_key]
             fcm = ::FCM.new(AP::PushNotificationExtension::PushNotification.config[:fcm_server_key])
-            if android_device_tokens
+            unless android_device_tokens.empty?
               fcm_result = fcm.send(android_device_tokens, hashed_message_payload)
               Rails.logger.info "Channel #{self.name}: Android FCM push status: #{fcm_result}"
             else
@@ -69,7 +69,7 @@ module PushNotificationExtension
           end
         end
 
-        Rails.logger.info("ios notifications: #{ios_notifications}")
+        Rails.logger.info("ios notifications: #{ios_notifications.count}")
         ios_notifications.each do |ios_notification|
           APNS.send_notifications([ios_notification])
         end
