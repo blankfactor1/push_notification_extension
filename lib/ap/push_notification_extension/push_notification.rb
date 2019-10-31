@@ -7,8 +7,6 @@ module AP
 
         @@config[:fcm_server_key] = ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY'].blank? ? config[:fcm_server_key] : ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY']
 
-        Rails.logger.info "FCM KEY: #{@@config[:fcm_server_key]}"
-
         @@config[:apple_cert] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT'].blank? ? config[:apple_cert] : ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT']
         @@config[:apple_cert_password] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'].blank? ? config[:apple_cert_password] :  ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD']
 
