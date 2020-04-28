@@ -9,24 +9,23 @@ gem "jquery-rails"
 gem 'mongoid'
 gem "resque"
 gem "redis"
-gem 'haml', '3.1.7'
-gem 'coffee-rails', '~> 3.2.1'
-gem 'jquery_mobile_rails', '1.2.0'
-gem 'simple_form', '2.0.4'
-gem 'sass-rails', '3.2.5'
-gem 'compass-rails', '1.0.3'
-gem "apns", '1.0.0', :git => 'git://github.com/jpoz/APNS.git'
+gem 'haml'
+gem 'coffee-rails'
+gem 'jquery_mobile_rails'
+gem 'simple_form'
+gem 'sass-rails'
+gem 'compass-rails'
+gem "apns"
 gem "fcm"
 gem 'actionpack'
-gem 'kaminari', '~> 0.14.1'
+gem 'kaminari'
 
 group :test do
-  gem 'mocha', "~> 0.13.3", require: false
+  gem 'mocha', require: false
   gem "shoulda"
 end
 
 group :assets do
-  gem 'therubyracer'
   gem 'uglifier'
 end
 
