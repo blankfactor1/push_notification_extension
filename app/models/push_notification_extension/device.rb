@@ -36,6 +36,7 @@ module PushNotificationExtension
     end
 
     def scrub
+      Rails.logger.info "==> Now PushNotificationExtension::Device::scrb"
       self.token = PushNotificationExtension::Device.scrub_token(token)
     end
 
