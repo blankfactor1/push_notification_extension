@@ -6,7 +6,7 @@ source "http://rubygems.org"
 gemspec
 
 gem "jquery-rails"
-gem 'mongoid', "~> 3.1"
+gem 'mongoid'
 gem "resque"
 gem "redis"
 gem 'haml', '3.1.7'
