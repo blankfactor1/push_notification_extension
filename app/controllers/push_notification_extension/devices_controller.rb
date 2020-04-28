@@ -2,8 +2,6 @@ require_dependency "push_notification_extension/application_controller"
 
 module PushNotificationExtension
   class DevicesController < ApplicationController
-    before_filter :authenticate_admin!
-        
     def new
       @device = ::PushNotificationExtension::Device.new
     end

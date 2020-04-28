@@ -2,8 +2,6 @@ require_dependency "push_notification_extension/application_controller"
 
 module PushNotificationExtension
   class ChannelsController < ApplicationController
-    before_filter :authenticate_admin!
-    
     def edit
       @channel = ::PushNotificationExtension::Channel.find(params[:id])
       @devices = @channel.devices.order_by([:type])

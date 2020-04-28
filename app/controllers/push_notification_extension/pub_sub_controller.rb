@@ -67,6 +67,7 @@ module PushNotificationExtension
         else
           render :json => { :success => false, :error => 'invalid device type' }
         end
+        true #Undefined method to_datetime for false:FalseClass
       end
 
       def ios?
