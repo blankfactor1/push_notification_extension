@@ -16,15 +16,15 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile"] + ["manifest.json"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails"
+  s.add_dependency "rails", "~> 3.2.8"
   s.add_dependency "json"
   s.add_dependency "multi_json"
   s.add_dependency "fcm"
-  s.add_dependency "mongoid"
+  s.add_dependency "mongoid", "~> 3.1"
   s.add_dependency "liquid"
   s.add_dependency "simple_form"
-  s.add_dependency "kaminari"
+  s.add_dependency "kaminari", '~> 0.14.1'
 
   s.add_development_dependency "database_cleaner"
-  s.add_development_dependency "factory_girl"
+  s.add_development_dependency "factory_girl", "= 3.3.0"
 end

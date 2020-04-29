@@ -3,16 +3,26 @@ module PushNotificationExtension
   class Channel
     include ActiveModel::MassAssignmentSecurity
     include Mongoid::Document
-    include Mongoid::Timestamps
+
+    before_create :set_timestamps
 
     # Channel identifier
     field :name, type: String
+    # add timestamp fields manually to avoid undefined method `to_datetime' for false:FalseClass
+    field :updated_at, type: DateTime
+    field :created_at, type: DateTime
 
     attr_accessible :name
 
     has_and_belongs_to_many :devices, :class_name => "PushNotificationExtension::Device"
 
     has_many :messages, :class_name => "PushNotificationExtension::Message", :inverse_of => :channel
+
+    def set_timestamps
+      self.updated_at = Time.current unless self.updated_at.present?
+      self.created_at = Time.current unless self.created_at.present?
+      true
+    end
 
     def publish(badge = 0, alert, sound, message_payload)
       ios_notifications     = []
