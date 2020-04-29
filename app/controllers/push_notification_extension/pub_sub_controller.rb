@@ -17,6 +17,7 @@ module PushNotificationExtension
           render :json => { :success => true }
         rescue
           render :json => { :success => false, :error => $!.message }
+        end
       else
         render :json => { :success => false, :error => device.errors }
       end
