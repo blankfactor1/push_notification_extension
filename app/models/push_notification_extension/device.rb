@@ -22,7 +22,7 @@ module PushNotificationExtension
 
     before_validation :scrub
 
-    attr_accessible :token, :type
+    attr_accessible :token, :type, :channels
 
     has_and_belongs_to_many :channels, :class_name => "PushNotificationExtension::Channel"
 

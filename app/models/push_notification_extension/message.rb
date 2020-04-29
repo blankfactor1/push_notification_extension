@@ -7,7 +7,7 @@ module PushNotificationExtension
     
     paginates_per 10
     
-    attr_accessible :alert, :badge, :message_payload
+    attr_accessible :alert, :badge, :message_payload, :channel
     
     field :alert, type: String
     field :badge, type: String

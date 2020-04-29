@@ -12,7 +12,7 @@ module PushNotificationExtension
     field :updated_at, type: DateTime
     field :created_at, type: DateTime
 
-    attr_accessible :name
+    attr_accessible :name, :devices, :messages
 
     has_and_belongs_to_many :devices, :class_name => "PushNotificationExtension::Device"
 
