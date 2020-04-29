@@ -11,12 +11,12 @@ module PushNotificationExtension
 
       if device.persisted?
         channel = ::PushNotificationExtension::Channel.where(name: params[:channel]).first || ::PushNotificationExtension::Channel.create(name: params[:channel])
-        channel.devices << device
-        if channel.save
+        begin
+          channel.devices << device
+          device.channels << channel
           render :json => { :success => true }
-        else
-          render :json => { :success => false, :error => channel.errors }
-        end
+        rescue
+          render :json => { :success => false, :error => $!.message }
       else
         render :json => { :success => false, :error => device.errors }
       end
