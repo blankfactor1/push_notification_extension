@@ -7,7 +7,7 @@ module PushNotificationExtension
     
     paginates_per 10
     
-    attr_accessible :alert, :badge, :message_payload, :channel
+    attr_accessible :alert, :badge, :message_payload
     
     field :alert, type: String
     field :badge, type: String
@@ -16,7 +16,7 @@ module PushNotificationExtension
     field :updated_at, type: DateTime
     field :created_at, type: DateTime
     
-    belongs_to :channel, class_name: "PushNotificationExtension::Channel", inverse_of: :channel
+    belongs_to :channel, class_name: "PushNotificationExtension::Channel", inverse_of: :messages
 
     def set_timestamps
       self.updated_at = Time.current unless self.updated_at.present?

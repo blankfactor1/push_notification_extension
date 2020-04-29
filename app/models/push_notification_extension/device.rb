@@ -22,9 +22,9 @@ module PushNotificationExtension
 
     before_validation :scrub
 
-    attr_accessible :token, :type, :channels
+    attr_accessible :token, :type
 
-    has_and_belongs_to_many :channels, :class_name => "PushNotificationExtension::Channel"
+    has_and_belongs_to_many :channels, :class_name => "PushNotificationExtension::Channel", :inverse_of => :devices
 
     def set_timestamps
       self.updated_at = Time.current unless self.updated_at.present?
