@@ -6,7 +6,6 @@ module PushNotificationExtension
     protect_from_forgery :except => [:subscribe, :unsubscribe, :publish]
 
     def subscribe
-      Rails.logger.info "==> Now in subscribe device_type: #{@device_type}, token: #{params[:device_token]}"
       device = ::PushNotificationExtension::Device.where(token: ::PushNotificationExtension::Device.scrub_token(params[:device_token]), type: @device_type).first || ::PushNotificationExtension::Device.create(token: params[:device_token], type: @device_type)
       Rails.logger.info "Received subscription request from mobile device: " + device.inspect
 
@@ -61,7 +60,6 @@ module PushNotificationExtension
     protected
 
       def detect_mobile_os
-        Rails.logger.info "==> Now in detect_mobile_os"
         if ios?
           @device_type = "ios"
         elsif android?
