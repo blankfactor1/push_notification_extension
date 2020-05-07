@@ -84,7 +84,7 @@ module PushNotificationExtension
         APNS.host = 'gateway.push.apple.com'
         ios_notifications.each do |ios_notification|
           APNS.send_notifications([ios_notification])
-        ends
+        end
 
         # send notifications to sandbox device tokens
         APNS.host = 'gateway.sandbox.push.apple.com'
