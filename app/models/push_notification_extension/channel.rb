@@ -26,7 +26,6 @@ module PushNotificationExtension
 
     def publish(badge = 0, alert, sound, message_payload)
       ios_notifications     = []
-      android_notifications = []
       android_device_tokens = []
 
       parsed_message_payload = nil
@@ -80,6 +79,15 @@ module PushNotificationExtension
         end
 
         Rails.logger.info("ios notifications count: #{ios_notifications.count}")
+        
+        # send notifications to production device tokens
+        APNS.host = 'gateway.push.apple.com'
+        ios_notifications.each do |ios_notification|
+          APNS.send_notifications([ios_notification])
+        ends
+
+        # send notifications to sandbox device tokens
+        APNS.host = 'gateway.sandbox.push.apple.com'
         ios_notifications.each do |ios_notification|
           APNS.send_notifications([ios_notification])
         end
