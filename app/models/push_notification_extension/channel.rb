@@ -1,4 +1,5 @@
 require 'fcm'
+require 'apnotic'
 module PushNotificationExtension
   class Channel
     include ActiveModel::MassAssignmentSecurity
@@ -39,17 +40,20 @@ module PushNotificationExtension
       else
         parsed_message_payload = message_payload
       end
-
+      apns_connection = Apnotic::Connection.new(cert_path: StringIO.new(@@apns_pem))
       Rails.logger.info("Push notification devices count: #{devices.count}")
       devices.each do |device|
         Rails.logger.info "Sending message #{message_payload}, with badge number #{badge}, to device #{device.token} of type #{device.type} for channel #{name}"
 
         if device.ios?
-          ios_notitifcation_options = {badge: badge, alert: alert, other: parsed_message_payload}
-          ios_notitifcation_options.merge!(sound: sound) if !sound.blank?
-          ios_notifications << APNS::Notification.new(device.token, ios_notitifcation_options)
+          notification = Apnotic::Notification.new(device.token)
+          notification.alert = alert
+          notification.badge = badge
+          notification.sound = sound if !sound.blank?
+          ios_notifications << notification
+          push = apns_connection.prepare_push(notification)
+          apns_connection.push_async(push)
         end
-
         android_device_tokens << device.token if device.android?
       end
 
@@ -80,17 +84,8 @@ module PushNotificationExtension
 
         Rails.logger.info("ios notifications count: #{ios_notifications.count}")
         
-        # send notifications to production device tokens
-        APNS.host = 'gateway.push.apple.com'
-        ios_notifications.each do |ios_notification|
-          APNS.send_notifications([ios_notification])
-        end
-
-        # send notifications to sandbox device tokens
-        APNS.host = 'gateway.sandbox.push.apple.com'
-        ios_notifications.each do |ios_notification|
-          APNS.send_notifications([ios_notification])
-        end
+        apns_connection.join(timeout: 5)
+        apns_connection.close
 
         self.messages << Message.new(alert: alert, badge: badge, message_payload: message_payload)
       else

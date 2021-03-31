@@ -1,3 +1,4 @@
+require 'openssl'
 module AP
   module PushNotificationExtension
     module PushNotification
@@ -12,18 +13,8 @@ module AP
 
         cert_valid = false
         if @@config[:apple_cert] && File.file?("#{Rails.root}#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
-
-          APNS.keystore  = "#{Rails.root}#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}"
-          APNS.pass = ::AP::PushNotificationExtension::PushNotification.config[:apple_cert_password] unless ::AP::PushNotificationExtension::PushNotification.config[:apple_cert_password].blank?
-
-          #pem_file = File.open("#{Rails.root}/#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
-          #pem_file_contents = pem_file.read
-          #unless pem_file_contents.match(/Apple Development IOS Push Services/)
-            # This is for production apps/certs only.
-            APNS.host = 'gateway.push.apple.com'
-          #end
-          #pem_file.close
-          APNS.port = 2195
+          keystore = OpenSSL::PKCS12.new(File.binread("#{Rails.root}#{@@config[:apple_cert]}"), @@config[:apple_cert_password])
+          @@apns_pem = keystore.certificate.to_pem
           cert_valid = true
         end
         raise "No push services configured!" unless cert_valid || @@config[:fcm_server_key]
