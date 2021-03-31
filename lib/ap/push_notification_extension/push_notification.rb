@@ -14,7 +14,7 @@ module AP
         cert_valid = false
         if @@config[:apple_cert] && File.file?("#{Rails.root}#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
           keystore = OpenSSL::PKCS12.new(File.binread("#{Rails.root}#{@@config[:apple_cert]}"), @@config[:apple_cert_password])
-          @@apns_pem = keystore.certificate.to_pem
+          @@config[:apns_cert_pem_string] = keystore.certificate.to_pem
           cert_valid = true
         end
         raise "No push services configured!" unless cert_valid || @@config[:fcm_server_key]
