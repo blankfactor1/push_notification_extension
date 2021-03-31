@@ -40,7 +40,7 @@ module PushNotificationExtension
       else
         parsed_message_payload = message_payload
       end
-      apns_connection = Apnotic::Connection.new(cert_path: StringIO.new(AP::PushNotificationExtension::PushNotification.apns_pem))
+      apns_connection = Apnotic::Connection.new(cert_path: StringIO.new(AP::PushNotificationExtension::PushNotification.config[:apns_cert_pem_string]))
       Rails.logger.info("Push notification devices count: #{devices.count}")
       devices.each do |device|
         Rails.logger.info "Sending message #{message_payload}, with badge number #{badge}, to device #{device.token} of type #{device.type} for channel #{name}"
