@@ -50,7 +50,7 @@ module PushNotificationExtension
           notification.alert = alert
           notification.badge = badge
           notification.sound = sound if !sound.blank?
-          notification.topic = 'com.mastercard.paywithrewards'
+          notification.topic = 'com.mastercard.mtf'
           ios_notifications << notification
           push = apns_connection.prepare_push(notification)
           push.on(:response) do |response|
