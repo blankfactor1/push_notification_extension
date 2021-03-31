@@ -52,6 +52,10 @@ module PushNotificationExtension
           notification.sound = sound if !sound.blank?
           ios_notifications << notification
           push = apns_connection.prepare_push(notification)
+          push.on(:response) do |response|
+            # read the response
+            print response.to_json
+          end
           apns_connection.push_async(push)
         end
         android_device_tokens << device.token if device.android?
