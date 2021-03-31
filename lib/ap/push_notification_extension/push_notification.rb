@@ -12,7 +12,7 @@ module AP
         @@config[:apple_cert_password] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'].blank? ? config[:apple_cert_password] :  ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD']
 
         cert_valid = false
-        if @@config[:apple_cert] && File.file?("#{Rails.root}#{::AP::PushNotificationExtension::PushNotification.config[:apple_cert]}")
+        if @@config[:apple_cert] && File.file?("#{Rails.root}#{@@config[:apple_cert]}")
           keystore = OpenSSL::PKCS12.new(File.binread("#{Rails.root}#{@@config[:apple_cert]}"), @@config[:apple_cert_password])
           @@config[:apns_cert_pem_string] = keystore.certificate.to_pem
           cert_valid = true
