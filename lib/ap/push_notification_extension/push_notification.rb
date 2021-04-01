@@ -7,14 +7,12 @@ module AP
         config = HashWithIndifferentAccess.new(config)
 
         @@config[:fcm_server_key] = ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY'].blank? ? config[:fcm_server_key] : ENV['AP_PUSH_NOTIFICATIONS_FCM_SERVER_KEY']
-        @@config[:apple_push_topic] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_TOPIC']
+        @@config[:apple_push_topic] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_TOPIC'].blank? ? config[:apple_push_topic] : ENV['AP_PUSH_NOTIFICATIONS_APPLE_TOPIC']
         @@config[:apple_cert] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT'].blank? ? config[:apple_cert] : ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT']
         @@config[:apple_cert_password] = ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD'].blank? ? config[:apple_cert_password] :  ENV['AP_PUSH_NOTIFICATIONS_APPLE_CERT_PASSWORD']
 
         cert_valid = false
         if @@config[:apple_cert] && File.file?("#{Rails.root}#{@@config[:apple_cert]}")
-          keystore = OpenSSL::PKCS12.new(File.binread("#{Rails.root}#{@@config[:apple_cert]}"), @@config[:apple_cert_password])
-          @@config[:apns_cert_pem_string] = keystore.certificate.to_pem
           cert_valid = true
         end
         raise "No push services configured!" unless cert_valid || @@config[:fcm_server_key]
